@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Personal Growth Tracker</title>
+
+  <style>
+    body { background:#0f0f0f; color:#fff; padding:20px; font-family:Arial; }
+
+    /* Reserve height so page doesn't jump */
+    #entries {
+      min-height: 260px;
+    }
+
+    /* Fade-in entries */
+    .entry {
+      opacity: 0;
+      transform: translateY(4px);
+      animation: fadeIn .25s ease-out forwards;
+
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 14px;
+      background: #121212;
+      border: 1px solid #2b2b2b;
+    }
+
+    @keyframes fadeIn {
+      to { opacity:1; transform:translateY(0); }
+    }
+
+    .entry h3 { color:#4ade80; margin-bottom:4px; }
+    .entry small { opacity:.7; }
+
+    .actions { display:flex; gap:8px; margin-top:6px; }
+
+    .actions button {
+      padding:6px 10px;
+      border-radius:8px;
+      border:1px solid #2c2c2c;
+      background:#1a1a1a;
+      color:#ddd;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .actions button:hover { background:#262626; }
+
+    .actions button:first-child {
+      border-color:#3b82f6;
+      color:#93c5fd;
+    }
+    .actions button:last-child {
+      border-color:#ef4444;
+      color:#fca5a5;
+    }
+
+    /* Skeleton cards */
+    .skeleton {
+      background:linear-gradient(90deg,#151515,#202020,#151515);
+      background-size:300%;
+      animation:shimmer 1.3s infinite;
+      height:90px;
+      border-radius:12px;
+      margin-bottom:12px;
+      border:1px solid #2a2a2a;
+    }
+
+    @keyframes shimmer {
+      0% { background-position:0% }
+      100% { background-position:300% }
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="toast" style="
+  position:fixed; bottom:20px; right:20px;
+  padding:12px 16px; border-radius:10px;
+  background:#111; border:1px solid #333;
+  color:white; display:none;
+"></div>
+
+
+
+<h1>🌱 Personal Growth Tracker</h1>
+
+<input id="searchInput"
+  placeholder="Search entries..."
+  oninput="loadEntries()"
+  style="margin-top:10px;width:250px"
+/>
+
+<div style="margin-top:10px">
+  <label>Sort by:</label>
+  <select id="sortSelect" onchange="loadEntries()">
+    <option value="newest">Newest first</option>
+    <option value="oldest">Oldest first</option>
+  </select>
+</div>
+<br>
+
+<p>Entries from database ↓</p>
+
+<div id="entries"></div>
+
+<h2>Add New Entry</h2>
+
+<input id="titleInput" placeholder="Entry title">
+<textarea id="noteInput" placeholder="Write your note..."></textarea>
+<label>Mood:</label>
+<select id="moodInput">
+  <option value="happy">😄 Great</option>
+  <option value="good">🙂 Good</option>
+  <option value="neutral" selected>😐 Neutral</option>
+  <option value="sad">😞 Tough day</option>
+</select>
+
+
+<button onclick="addEntry()">Save Entry</button>
+
+<script src="script.js"></script>
+<div id="editModal" style="
+  position: fixed; inset: 0;
+  display: none;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(6px);
+  align-items: center;
+  justify-content: center;
+">
+  <div style="
+    background:#111;
+    border:1px solid #333;
+    padding:16px;
+    border-radius:14px;
+    width:340px;
+  ">
+    <h3>Edit Entry</h3>
+
+    <input id="editTitle" style="width:100%;margin-top:8px">
+    <textarea id="editNote" style="width:100%;margin-top:6px"></textarea>
+
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button onclick="saveEdit()">Save</button>
+      <button onclick="closeEdit()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

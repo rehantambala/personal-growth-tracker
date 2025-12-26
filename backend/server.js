@@ -9,6 +9,8 @@ cors → allows frontend & backend to communicate
 ❌ we cannot create routes
 ❌ browser would block requests */
 
+const mongoose = require("mongoose");
+
 
 //🟢 Creating the server
 const app = express();  
@@ -19,6 +21,45 @@ will run inside this app object */
 
 //This creates the server application object.
 // Everything runs inside this.
+
+// 🟢 Connect to MongoDB
+mongoose.connect("mongodb://127.0.0.1:27017/personal_growth_tracker")
+  .then(() => {
+    console.log("MongoDB connected successfully 🚀");
+  })
+  .catch(err => {
+    console.error("MongoDB connection error ❌", err);
+  });
+
+  // 🟢 MongoDB Schema (Structure of our Entry)
+const entrySchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  note: { type: String, required: true },
+
+  mood: {
+    type: String,
+    enum: ["happy","good","neutral","sad"],
+    default: "neutral"
+  },
+
+  category: {
+    type: String,
+    default: "General"
+  },
+
+  type: {
+    type: String,
+    default: "Reflection"
+  },
+
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: Date
+});
+
+
+// 🟢 Model = Collection in DB
+const Entry = mongoose.model("Entry", entrySchema);
+
 
 
 //Middleware = Helpers that run before routes
@@ -38,17 +79,37 @@ When someone sends JSON like:*/
 
 
 // temporary storage (will replace with DB later)
-let entries = [];
+// let entries = [];
 
 
 // test route
-app.get("/api/health", (req, res) => {
+/* app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
     message: "Backend is running 🚀"
 
   });
+}); */
+
+// get all entries from MongoDB
+app.get("/api/entries", async (req, res) => {
+  try {
+    const entries = await Entry.find().sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: entries.length,
+      entries
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch entries",
+      error: err.message
+    });
+  }
 });
+
 
 // add a new growth entry
 /*app.post("/api/entries", (req, res) => {
@@ -69,7 +130,7 @@ app.get("/api/health", (req, res) => {
 }); */
 
 //Validation - improved version of the above route(POST /api/entries)
-app.post("/api/entries", (req, res) => {
+/*app.post("/api/entries", (req, res) => {
 
   const title = (req.body.title || "").trim();
   const note = (req.body.note || "").trim();
@@ -104,20 +165,45 @@ app.post("/api/entries", (req, res) => {
     message: "Entry saved successfully",
     entry
   });
+});  */
+app.post("/api/entries", async (req, res) => {
+  try {
+    const entry = await Entry.create({
+      title: req.body.title,
+      note: req.body.note,
+      mood: req.body.mood || "neutral",
+      category: req.body.category || "General",
+      type: req.body.type || "Reflection"
+    });
+
+    res.json({
+      success: true,
+      message: "Entry saved",
+      entry
+    });
+
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to save entry",
+      error: err.message
+    });
+  }
 });
 
 
+
 // get all entries
-app.get("/api/entries", (req, res) => {
+/* app.get("/api/entries", (req, res) => {
   res.json({
     count: entries.length,
     entries
   });
-});
+}); */
 
 
 // delete an entry by id
-app.delete("/api/entries/:id", (req, res) => {
+/*app.delete("/api/entries/:id", (req, res) => {
 
 //🔹 Get id from URL
   const id = Number(req.params.id);
@@ -143,11 +229,40 @@ app.delete("/api/entries/:id", (req, res) => {
     deleted
   });
 
+}); */
+
+// 🗑 Delete entry from MongoDB
+app.delete("/api/entries/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const deleted = await Entry.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({
+        success: false,
+        message: "Entry not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Entry deleted successfully 🗑",
+      deleted
+    });
+
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to delete entry",
+      error: err.message
+    });
+  }
 });
 
 
 // update an entry
-app.patch("/api/entries/:id", (req, res) => {
+/*app.patch("/api/entries/:id", (req, res) => {
 
 //🔹 Get id from URL
   const id = Number(req.params.id);
@@ -169,7 +284,7 @@ if not → ignore safely */
 
 //🔹 If request contains nothing to update
   // if both fields missing
-  if (!title && !note) {
+  /*if (!title && !note) {
     return res.status(400).json({
       success: false,
       message: "Nothing to update"
@@ -187,6 +302,44 @@ if not → ignore safely */
     entry
   });
 
+});  */
+
+// improved version of the above route (PATCH /api/entries/:id)
+app.patch("/api/entries/:id", async (req, res) => {
+  try {
+    const { title, note } = req.body;
+
+    // update only provided fields
+    const entry = await Entry.findByIdAndUpdate(
+      req.params.id,
+      {
+        ...(title && { title }),
+        ...(note && { note }),
+        updatedAt: new Date()
+      },
+      { new: true }
+    );
+
+    if (!entry) {
+      return res.status(404).json({
+        success: false,
+        message: "Entry not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Entry updated successfully",
+      entry
+    });
+
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to update entry",
+      error: err.message
+    });
+  }
 });
 
 
