@@ -1,0 +1,163 @@
+body {
+  margin: 0;
+  background: #0b0b0b;
+  color: white;
+  font-family: -apple-system, SF Pro Display, Inter, sans-serif;
+}
+
+.app-container {
+  padding: 32px;
+}
+
+.app-title {
+  font-size: 28px;
+  color: #8df58c;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  opacity: .7;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+
+  padding: 18px;
+  margin-bottom: 14px;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  transition: transform .15s ease, border .2s ease, background .2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.10);
+}
+
+/* ==== CINEMATIC GRID ==== */
+
+.entries-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 40px;
+}
+
+/* ==== PROJECT STYLE CARDS ==== */
+
+.entry-card {
+  background: linear-gradient(145deg, #0d0d0d, #111);
+  border: 1px solid #2a2a2a;
+  border-radius: 18px;
+
+  padding: 22px;
+  min-height: 140px;
+
+  transition: 300ms ease;
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.25),
+    inset 0 0 0 0 rgba(255,255,255,.06);
+}
+
+.entry-card:hover {
+  transform: translateY(-6px) scale(1.01);
+
+  border-color: #3a3a3a;
+
+  box-shadow:
+    0 25px 45px rgba(0,0,0,.45),
+    inset 0 0 40px rgba(255,255,255,.05);
+}
+
+/* ==== TYPOGRAPHY FEEL ==== */
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.entry-header h2 {
+  font-size: 22px;
+  letter-spacing: .3px;
+  margin: 0;
+}
+
+.entry-type {
+  opacity: .6;
+  font-size: 12px;
+}
+
+.entry-note {
+  opacity: .75;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+.entry-date {
+  margin-top: 14px;
+  display: block;
+  opacity: .45;
+}
+/* ===== HERO CINEMATIC HEADER ===== */
+
+.hero {
+  margin-top: 8px;
+  margin-bottom: 26px;
+}
+
+.hero-title {
+  font-size: 46px;
+  font-weight: 600;
+  letter-spacing: .5px;
+
+  background: linear-gradient(180deg,#fff,#b9b9b9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow: 0 10px 40px rgba(0,0,0,.5);
+
+  margin: 0 0 6px 0;
+}
+
+/* Soft lime accent */
+.hero-title .accent {
+  background: linear-gradient(180deg,#7dffa5,#7bffb7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Cinematic subtitle */
+.hero-sub {
+  opacity: .65;
+  font-size: 14px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+.hero-title,
+.hero-sub {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: fadeUp 0.6s ease forwards;
+}
+
+.hero-sub {
+  animation-delay: .12s;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
