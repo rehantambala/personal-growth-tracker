@@ -1,0 +1,267 @@
+.splash-container {
+  position: fixed;
+  inset: 0;
+  background: #030303;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Main Title */
+
+.splash-title {
+  font-size: 46px;
+  letter-spacing: 10px;
+  font-weight: 500;
+  color: #6b6b6b;
+  text-transform: uppercase;
+}
+
+/* Hidden by default */
+
+.splash-letter {
+  opacity: 0;
+  filter: blur(6px);
+  display: inline-block;
+}
+
+/* When revealed */
+
+.splash-letter.visible {
+  opacity: 1;
+  filter: blur(0px);
+  animation: letterShine 0.9s ease forwards;
+}
+
+/* Shine effect */
+
+@keyframes letterShine {
+  0% {
+    color: #555;
+    text-shadow: none;
+  }
+
+  40% {
+    color: #ffffff;
+    text-shadow:
+      0 0 14px rgba(255,255,255,.9),
+      0 0 40px rgba(255,255,255,.5);
+  }
+
+  100% {
+    color: #e6e6e6;
+    text-shadow:
+      0 0 8px rgba(255,255,255,.3);
+  }
+}
+/* 🌌 Full-screen cinematic overlay */
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+/* 🎥 Slow camera zoom-in */
+.splash-zoom {
+  transform: scale(1.25);
+  transition: transform 3.5s ease-in-out;
+}
+
+.splash-zoom.zoom-out {
+  transform: scale(1);
+}
+
+/* ✨ Title */
+.splash-title {
+  font-size: 48px;
+  letter-spacing: 12px;
+  font-weight: 400;
+  color: rgba(255,255,255,.85);
+}
+
+/* 🌫 Shine pass remains */
+.shine-mask {
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.9),
+    transparent
+  );
+  filter: blur(18px);
+  animation: titleShine 5s linear forwards;
+}
+
+@keyframes titleShine {
+  from { transform: translateX(-40%); }
+  to   { transform: translateX(140%); }
+}
+
+/* 🫧 Dust particle field */
+.dust-layer {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(#ffffff22 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: .18;
+  animation:
+    dustFloat 12s ease-in-out infinite,
+    dustDrift 16s linear infinite;
+  pointer-events: none;
+  filter: blur(0.4px);
+}
+
+/* subtle floating motion */
+@keyframes dustFloat {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0px); }
+}
+
+/* slow sideways drift */
+@keyframes dustDrift {
+  from { transform: translateX(-10px); }
+  to   { transform: translateX(10px); }
+}
+/* 🌑 Full cinematic overlay */
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+  transition: opacity .8s ease;
+}
+
+.splash-overlay.fade-out {
+  opacity: 0;
+}
+
+/* 🎥 cinematic zoom-in */
+.splash-zoom {
+  transform: scale(1.25);
+  animation: introZoom 3.2s ease-in-out forwards;
+}
+
+@keyframes introZoom {
+  to { transform: scale(1); }
+}
+
+/* ✨ Title */
+.splash-title {
+  font-size: 42px;
+  letter-spacing: 10px;
+  font-weight: 300;
+  color: rgba(255,255,255,.9);
+}
+
+/* 🕯 Letter reveal */
+.splash-letter {
+  opacity: .05;
+  filter: blur(6px);
+  transition: opacity .4s ease, filter .4s ease;
+}
+
+.splash-letter.visible {
+  opacity: 1;
+  filter: blur(0px);
+}
+
+/* ✨ Soft shine pulse on each letter */
+.splash-letter.visible {
+  animation: letterGlow 1.4s ease forwards;
+}
+
+@keyframes letterGlow {
+  0% { text-shadow: 0 0 0px #fff; }
+  40% { text-shadow: 0 0 18px #ffffffaa; }
+  100% { text-shadow: 0 0 4px #ffffff33; }
+}
+
+/* 🫧 Ambient dust */
+.dust-layer {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(#ffffff22 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: .18;
+  filter: blur(.4px);
+  animation:
+    dustFloat 12s ease-in-out infinite,
+    dustDrift 16s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes dustFloat {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes dustDrift {
+  from { transform: translateX(-14px); }
+  to   { transform: translateX(14px); }
+}
+/* dissolve instead of cut */
+.splash-overlay.dissolve {
+  backdrop-filter: blur(6px);
+  transition: opacity .9s ease, filter 1.2s ease;
+}
+
+.splash-overlay.fade-out {
+  opacity: 0;
+  filter: blur(18px);
+}
+
+
+/* 🚀 camera passes through title */
+.zoom-pass {
+  animation: passThrough 1.2s ease forwards;
+}
+
+@keyframes passThrough {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+/* button */
+.tap-to-enter {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 10px 22px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.25);
+
+  background: rgba(0,0,0,.35);
+  color: #e6e6e6;
+
+  font-size: 14px;
+  letter-spacing: .6px;
+
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+
+  transition: all .3s ease;
+}
+
+.tap-to-enter:hover {
+  border-color: rgba(255,255,255,.6);
+  background: rgba(255,255,255,.12);
+  transform: translateX(-50%) translateY(-2px);
+}

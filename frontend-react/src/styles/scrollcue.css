@@ -1,0 +1,118 @@
+.scroll-cue-container {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+
+  animation: cueFadeIn 1.3s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes cueFadeIn {
+  to { opacity: 1; }
+}
+
+.scroll-text {
+  font-size: 14px;
+  letter-spacing: .6px;
+  color: rgba(240,240,240,.85);
+  margin-bottom: 10px;
+}
+
+/* Curved arrow */
+.scroll-arrow {
+  position: relative;
+  width: 90px;
+  height: 40px;
+}
+
+/* curve path */
+.scroll-arrow .curve {
+  position: absolute;
+  width: 90px;
+  height: 40px;
+
+  border: 2px solid rgba(255,255,255,.4);
+  border-color: rgba(255,255,255,.35) transparent transparent transparent;
+
+  border-radius: 60% 60% 0 0;
+
+  animation: arrowFloat 2.4s ease-in-out infinite;
+}
+
+@keyframes arrowFloat {
+  0%   { transform: translateY(0); opacity: .7; }
+  50%  { transform: translateY(-6px); opacity: 1; }
+  100% { transform: translateY(0); opacity: .7; }
+}
+
+/* arrowhead */
+.arrow-head {
+  position: absolute;
+  bottom: -4px;
+  left: 86px;
+
+  width: 7px;
+  height: 7px;
+
+  border-top: 2px solid rgba(255,255,255,.5);
+  border-right: 2px solid rgba(255,255,255,.5);
+
+  transform: rotate(45deg);
+
+  animation: arrowHeadPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes arrowHeadPulse {
+  0%   { opacity: .6; }
+  50%  { opacity: 1; }
+  100% { opacity: .6; }
+}
+.scroll-cue-container {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  text-align: center;
+  pointer-events: none;
+  z-index: 2;
+
+  opacity: 0;
+  animation: cueFadeIn 1.3s ease-out forwards;
+}
+
+.scroll-text {
+  font-size: 16px;
+  color: rgba(255,255,255,.9);
+  letter-spacing: .4px;
+}
+.scroll-curve {
+  width: 90px;
+  height: 28px;
+
+  border-top: 2px solid rgba(255,255,255,.7);
+  border-radius: 50%;
+
+  opacity: .9;
+  transform: translateY(2px);
+}
+.scroll-arrow {
+  font-size: 22px;
+  color: white;
+  opacity: .85;
+
+  animation: arrowPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes arrowPulse {
+  0%   { transform: translateY(0); opacity: .6; }
+  50%  { transform: translateY(7px); opacity: 1; }
+  100% { transform: translateY(0); opacity: .6; }
+}

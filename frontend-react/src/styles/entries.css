@@ -1,0 +1,502 @@
+/* 🌑 Cinematic Ambient Background */
+body {
+  background: radial-gradient(
+    circle at 20% 10%,
+    rgba(60, 60, 60, 0.15),
+    transparent 40%
+  ),
+  radial-gradient(
+    circle at 80% 20%,
+    rgba(120, 120, 120, 0.12),
+    transparent 45%
+  ),
+  #0b0b0b;
+  color: #e7e7e7;
+}
+
+/* 🌲 Section Layout */
+.entries-wrapper {
+  max-width: 1100px;
+  margin: 100px auto;
+  padding: 20px 16px;
+  position: relative;
+}
+
+/* 🕯 Calm Title Block */
+.entries-title {
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #fafafa;
+}
+
+.entries-subtitle {
+  margin-top: 6px;
+  color: #b3b3b3;
+  font-size: 16px;
+}
+
+/* ✨ Header Row */
+.entries-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+/* 🌌 New Entry Button — stays in header */
+.new-entry-btn {
+  padding: 10px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.15),
+    rgba(255,255,255,0.02)
+  );
+  color: white;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all .25s ease;
+  backdrop-filter: blur(6px);
+
+  /* FIX: prevent floating bottom-right */
+  position: relative;
+}
+
+.new-entry-btn:hover {
+  border-color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-1px);
+}
+
+/* 🧊 Cinematic Grid */
+.entries-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+/* 🪞 Reflection Card */
+.entry-card {
+  border-radius: 22px;
+  padding: 18px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,0.06),
+    rgba(0,0,0,0.35)
+  );
+
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 40px 60px rgba(0,0,0,0.45),
+    inset 0 0 20px rgba(255,255,255,0.05);
+
+  transition: all .35s ease;
+
+  /* 🫧 Subtle breathing pulse */
+  animation: cardIdlePulse 9s ease-in-out infinite;
+}
+
+/* calm hover — cinematic depth */
+.entry-card:hover {
+  transform: translateY(-6px) scale(1.015);
+
+  box-shadow:
+    0 60px 90px rgba(0,0,0,.6),
+    inset 0 0 30px rgba(255,255,255,.08);
+}
+
+/* breathing effect */
+@keyframes cardIdlePulse {
+  0%   { transform: translateY(0px) scale(1); }
+  50%  { transform: translateY(-2px) scale(1.004); }
+  100% { transform: translateY(0px) scale(1); }
+}
+
+/* 🕯 Inner Layout */
+.entry-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.entry-type {
+  font-size: 13px;
+  color: #bdbdbd;
+}
+
+/* 📝 Title */
+.entry-card h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+}
+
+/* 🌫 Note */
+.entry-note {
+  color: #cfcfcf;
+  line-height: 1.55;
+  letter-spacing: 0.2px;
+}
+
+/* 🕰 Date */
+.entry-date {
+  margin-top: 2px;
+  color: #9b9b9b;
+}
+
+/* 🌧 Empty State */
+.empty-state {
+  opacity: 0.7;
+  text-align: center;
+  grid-column: span 2;
+  margin-top: 30px;
+}
+
+/* 🌫 Ambient breathing field */
+.entries-wrapper::before {
+  content: "";
+  position: fixed;
+  top: -10%;
+  left: -10%;
+  width: 130%;
+  height: 130%;
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle at 20% 30%,
+    rgba(100,100,100,.09),
+    transparent 50%
+  );
+
+  filter: blur(60px);
+  animation: ambientFloat 18s ease-in-out infinite;
+  opacity: .35;
+}
+
+@keyframes ambientFloat {
+  0%   { transform: translateY(0px) translateX(0px); }
+  50%  { transform: translateY(-28px) translateX(18px); }
+  100% { transform: translateY(0px) translateX(0px); }
+}
+
+/* 📱 Mobile */
+@media (max-width: 900px) {
+  .entries-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* 🌌 Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+/* 🧊 Modal Container */
+.modal-container {
+  width: 460px;
+  padding: 18px 20px;
+  border-radius: 20px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,0.08),
+    rgba(0,0,0,0.45)
+  );
+
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.55),
+    inset 0 0 20px rgba(255,255,255,0.06);
+
+  animation: modalFade 0.25s ease-out;
+}
+
+/* ✨ Soft fade-in animation */
+@keyframes modalFade {
+  from { transform: translateY(10px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* 📝 Inputs */
+.modal-container input,
+.modal-container textarea {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+}
+
+.modal-container textarea {
+  min-height: 110px;
+  resize: none;
+}
+
+/* 🎛 Action Buttons */
+.modal-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-actions button {
+  padding: 8px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.1);
+  color: white;
+  cursor: pointer;
+}
+
+.modal-actions button:hover {
+  background: rgba(255,255,255,0.2);
+}
+/* ================================
+   🌌 Cinematic Expanded Reflection View
+   ================================ */
+
+.expanded-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+      circle at 30% 20%,
+      rgba(255,255,255,0.05),
+      transparent 40%
+    ),
+    rgba(0,0,0,0.75);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  animation: overlayFade .35s ease forwards;
+}
+
+@keyframes overlayFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 📖 Floating Reflection Panel */
+.expanded-panel {
+  width: 680px;
+  max-width: 92%;
+  padding: 26px 26px 30px;
+
+  border-radius: 22px;
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,0.08),
+    rgba(0,0,0,0.45)
+  );
+  border: 1px solid rgba(255,255,255,0.15);
+
+  box-shadow:
+    0 60px 120px rgba(0,0,0,0.65),
+    inset 0 0 16px rgba(255,255,255,0.06);
+
+  backdrop-filter: blur(14px);
+
+  animation: panelRise .45s ease forwards;
+}
+
+@keyframes panelRise {
+  from {
+    transform: translateY(20px) scale(.97);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ❌ Close Button */
+.expanded-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+
+  padding: 6px 10px;
+  border-radius: 12px;
+
+  background: rgba(0,0,0,0.45);
+  color: #e6e6e6;
+
+  border: 1px solid rgba(255,255,255,0.18);
+  cursor: pointer;
+
+  transition: all .25s ease;
+}
+
+.expanded-close:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.35);
+}
+
+/* 🕯 Title */
+.expanded-title {
+  margin-top: 8px;
+  font-size: 22px;
+  font-weight: 600;
+  color: white;
+}
+
+/* 🕰 Date */
+.expanded-date {
+  display: block;
+  margin-top: 4px;
+  color: #bdbdbd;
+  font-size: 13px;
+}
+
+/* ✍ Reflection Body */
+.expanded-body {
+  margin-top: 14px;
+  color: #e7e7e7;
+
+  line-height: 1.65;
+  letter-spacing: .2px;
+  white-space: pre-wrap;
+}
+
+/* 🌬 Gentle breathing */
+.expanded-panel {
+  animation: panelRise .45s ease, breathe 9s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%   { transform: translateY(0px) scale(1); }
+  50%  { transform: translateY(-3px) scale(1.01); }
+  100% { transform: translateY(0px) scale(1); }
+}
+/* ===========================
+   🌒 Memory Timeline Marker
+   =========================== */
+
+.timeline-track {
+  position: fixed;
+  left: 34px;
+  top: 80px;
+  bottom: 80px;
+
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.08),
+    rgba(255,255,255,0.02)
+  );
+
+  border-radius: 10px;
+  pointer-events: none;
+  opacity: .7;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+  transform: translate(-50%, 0);
+
+  background: rgba(255,255,255,.8);
+  box-shadow:
+    0 0 10px rgba(255,255,255,.45),
+    0 0 22px rgba(255,255,255,.35);
+
+  transition: transform .25s ease;
+}
+/* ===========================
+   🕯 Deep Reflection Mode
+   =========================== */
+
+.deep-mode .expanded-panel {
+  width: 88%;
+  max-width: 1100px;
+  height: 86vh;
+
+  padding: 40px 48px;
+  border-radius: 28px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,0.06),
+    rgba(0,0,0,0.6)
+  );
+
+  box-shadow:
+    0 80px 140px rgba(0,0,0,0.75),
+    inset 0 0 30px rgba(255,255,255,0.06);
+
+  backdrop-filter: blur(16px);
+}
+
+.deep-mode .expanded-body {
+  font-size: 18px;
+  line-height: 1.85;
+  letter-spacing: .25px;
+}
+
+.deep-mode .expanded-overlay {
+  background: rgba(0,0,0,.88);
+}
+
+.deep-mode .expanded-panel {
+  animation: breatheDeep 11s ease-in-out infinite;
+}
+
+@keyframes breatheDeep {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.012); }
+  100% { transform: scale(1); }
+}
+.entry-meta {
+  margin-top: 6px;
+  display: flex;
+  gap: 8px;
+  opacity: .9;
+}
+
+.meta-chip {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  letter-spacing: .3px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  backdrop-filter: blur(6px);
+  transition: .3s ease;
+}
+
+.meta-chip:hover {
+  background: rgba(255,255,255,.14);
+}
+
+.mood-chip {
+  text-transform: capitalize;
+}

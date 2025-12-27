@@ -159,5 +159,118 @@ body {
     transform: translateY(0);
   }
 }
+/* ===== FLOAT BUTTON ===== */
+.add-entry-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+
+  padding: 12px 18px;
+  border-radius: 22px;
+
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.25);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  font-size: 14px;
+  letter-spacing: .6px;
+  color: #fff;
+
+  cursor: pointer;
+  transition: 300ms ease;
+}
+
+.add-entry-btn:hover {
+  background: rgba(255,255,255,.22);
+  transform: translateY(-2px);
+}
+
+
+/* ===== MODAL BACKDROP ===== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(6px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  animation: fadeIn .4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
+/* ===== MODAL CARD ===== */
+.modal-card {
+  background: rgba(18,18,18,.92);
+  border: 1px solid rgba(255,255,255,.15);
+
+  border-radius: 18px;
+  padding: 22px;
+
+  width: 420px;
+  max-width: 92%;
+
+  box-shadow: 0 40px 80px rgba(0,0,0,.5);
+}
+
+.modal-title {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+}
+
+
+/* ===== INPUTS ===== */
+.modal-input,
+.modal-text {
+  width: 100%;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.18);
+  color: white;
+
+  padding: 10px 12px;
+  border-radius: 12px;
+
+  margin-top: 8px;
+}
+
+.modal-text {
+  min-height: 120px;
+  resize: none;
+}
+
+
+/* ===== BUTTONS ===== */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  margin-top: 14px;
+}
+
+.cancel-btn {
+  background: transparent;
+  color: #ccc;
+  border: none;
+}
+
+.save-btn {
+  background: rgba(125,255,165,.25);
+  border: 1px solid rgba(125,255,165,.6);
+  color: white;
+
+  border-radius: 16px;
+  padding: 8px 16px;
+}
 
 
