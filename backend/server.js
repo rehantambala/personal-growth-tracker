@@ -23,7 +23,9 @@ will run inside this app object */
 // Everything runs inside this.
 
 // 🟢 Connect to MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/personal_growth_tracker")
+mongoose.connect("mongodb://127.0.0.1:27017/personal_growth_tracker", {
+  serverSelectionTimeoutMS: 5000
+})
   .then(() => {
     console.log("MongoDB connected successfully 🚀");
   })

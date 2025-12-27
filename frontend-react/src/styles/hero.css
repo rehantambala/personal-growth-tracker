@@ -1,0 +1,185 @@
+/* =======================
+   CINEMATIC HERO SCENE
+======================= */
+
+.hero-scene {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      rgba(10,10,10,.78),
+      rgba(10,10,10,.88)
+    ),
+    url("../assets/photo-1476231682828-37e571bc172f.avif");
+
+  background-size: cover;
+  background-position: center 35%;
+  background-attachment: fixed;
+
+  transition: opacity 1.2s ease, filter 1.2s ease, transform 1.2s ease;
+}
+
+/* soft light wash */
+.hero-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle at 50% 60%,
+    rgba(255,255,255,.08) 0%,
+    rgba(255,255,255,.02) 35%,
+    rgba(0,0,0,.7) 90%
+  );
+}
+
+/* =======================
+   FLOATING AMBIENCE
+======================= */
+
+.ambient-layer {
+  position: absolute;
+  inset: 0;
+  animation: ambient-float 14s ease-in-out infinite;
+}
+
+@keyframes ambient-float {
+  0%   { transform: translateY(6px); }
+  50%  { transform: translateY(-4px); }
+  100% { transform: translateY(6px); }
+}
+
+/* =======================
+   BREATHING RINGS
+======================= */
+
+.breath-ring {
+  position: absolute;
+  width: 540px;
+  height: 540px;
+
+  border-radius: 50%;
+  border: 1.4px solid rgba(255,255,255,.18);
+  opacity: .18;
+
+  animation: slow-breath 7.5s ease-in-out infinite;
+}
+
+@keyframes slow-breath {
+  0%   { transform: scale(1);    opacity: .18; }
+  50%  { transform: scale(1.02); opacity: .24; }
+  100% { transform: scale(1);    opacity: .18; }
+}
+
+.ring-left {
+  left: -200px;
+  top: 10%;
+}
+
+.ring-right {
+  right: -220px;
+  top: 16%;
+}
+
+/* =======================
+   HERO CONTENT
+======================= */
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  margin-top: 18vh;
+}
+
+.label {
+  opacity: .7;
+  letter-spacing: 2.4px;
+  font-size: 12px;
+  margin-bottom: 12px;
+
+  animation: fadeUp 1s ease forwards;
+}
+
+.hero-title {
+  font-size: 46px;
+  font-weight: 600;
+  letter-spacing: .4px;
+  line-height: 1.2;
+
+  background: linear-gradient(180deg,#fff,#c7c7c7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow: 0 12px 40px rgba(0,0,0,.55);
+
+  opacity: 0;
+  transform: translateY(8px);
+
+  animation: fadeUp 1.2s ease forwards;
+}
+
+.hero-title .accent {
+  background: linear-gradient(180deg,#85ffaf,#7affc7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-buttons {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fadeUp 1.3s ease forwards;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =======================
+   BUTTONS
+======================= */
+
+.primary-btn,
+.secondary-btn {
+  padding: 8px 16px;
+  border-radius: 22px;
+  transition: 300ms ease;
+}
+
+.primary-btn {
+  border: none;
+  background: rgba(255,255,255,.22);
+  color: white;
+}
+
+.secondary-btn {
+  border: 1px solid rgba(255,255,255,.28);
+  background: transparent;
+  color: white;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+  background: rgba(255,255,255,.32);
+}
+.hero-content {
+  opacity: 1 !important;
+  transform: none !important;
+  z-index: 10;
+  color: white;
+}
+
+.hero-title {
+  opacity: 1 !important;
+}

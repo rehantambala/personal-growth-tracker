@@ -1,26 +1,30 @@
 export default function EntryCard({ entry }) {
+
+  const date = new Date(
+    entry.createdAt || entry.date
+  ).toLocaleDateString();
+
   return (
     <div className="entry-card">
-
       <div className="entry-inner">
 
         <div className="entry-header">
-          <h2>{entry.title}</h2>
+          <h3>{entry.title || "Untitled Reflection"}</h3>
+
           <span className="entry-type">
-            {entry.type || "Reflection"}
+            {entry.type || entry.category || "Reflection"}
           </span>
         </div>
 
         <p className="entry-note">
-          {entry.note}
+          {entry.content || entry.note}
         </p>
 
-        <small className="entry-date">
-          {new Date(entry.createdAt).toLocaleString()}
-        </small>
+        <span className="entry-date">
+          {date}
+        </span>
 
       </div>
-
     </div>
   );
 }
