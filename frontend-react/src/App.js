@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-import NewEntryModal from "./components/NewEntryModal";
-
+import SplashIntro from "./components/SplashIntro";
 import HeroScene from "./components/HeroScene";
 import EntriesSection from "./components/EntriesSection";
+import NewEntryModal from "./components/NewEntryModal";   // ✅ add back
 
 export default function App() {
 
-  // ===== STATE =====
+  // ===== INTRO STATE =====
+  const [showIntro, setShowIntro] = useState(true);
+
+  // ===== ENTRY STATE =====
   const [entries, setEntries] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
@@ -15,8 +18,7 @@ export default function App() {
   // ===== SAVE NEW ENTRY (TEMP LOCAL PUSH) =====
   const handleSaveEntry = async (entry) => {
     setEntries(prev => [entry, ...prev]);
-
-    // TODO: later send to backend
+    // (later we also send to backend)
   };
 
 
@@ -31,27 +33,30 @@ export default function App() {
 
   return (
     <>
-      <HeroScene />
-
-      <EntriesSection entries={entries} />
-
-
-      {/* ===== MODAL (SHOW WHEN TRUE) ===== */}
-      {showModal && (
-        <NewEntryModal
-          onClose={() => setShowModal(false)}
-          onSave={handleSaveEntry}
-        />
+      {/* ===== CINEMATIC INTRO ===== */}
+      {showIntro && (
+        <SplashIntro onFinish={() => setShowIntro(false)} />
       )}
 
+      {/* ===== MAIN APP AFTER INTRO ===== */}
+      {!showIntro && (
+        <>
+          <HeroScene />
 
-      {/* ===== FLOAT ACTION BUTTON ===== */}
-      <button
-        className="add-entry-btn"
-        onClick={() => setShowModal(true)}
-      >
-        ✨ New Reflection
-      </button>
+          {/* Pass entries to list */}
+          <EntriesSection entries={entries} />
+
+          {/* ===== MODAL ===== */}
+          {showModal && (
+            <NewEntryModal
+              onClose={() => setShowModal(false)}
+              onSave={handleSaveEntry}
+            />
+          )}
+
+         
+        </>
+      )}
     </>
   );
 }

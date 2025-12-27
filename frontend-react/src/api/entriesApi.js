@@ -1,4 +1,14 @@
-const API_BASE = "http://localhost:5000"; // change later if deployed
+const API_BASE = "http://localhost:4000";
+
+export async function fetchEntriesFromBackend() {
+  try {
+    const res = await fetch(`${API_BASE}/entries`);
+    return await res.json();
+  } catch (err) {
+    console.error("Fetch entries failed", err);
+    return [];
+  }
+}
 
 export async function saveEntryToBackend(entry) {
   try {
@@ -8,25 +18,23 @@ export async function saveEntryToBackend(entry) {
       body: JSON.stringify(entry)
     });
 
-    if (!res.ok) throw new Error("Server rejected request");
-
     return await res.json();
-
   } catch (err) {
-    console.warn("Backend save failed — keeping local copy", err);
-    return null; // fail gracefully
+    console.error("Save entry failed", err);
+    return null;
   }
 }
-export async function fetchEntriesFromBackend() {
+export async function updateEntryInBackend(id, updates) {
   try {
-    const res = await fetch("http://localhost:5000/entries");
-
-    if (!res.ok) throw new Error("Fetch failed");
+    const res = await fetch(`http://localhost:4000/entries/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates)
+    });
 
     return await res.json();
-
   } catch (err) {
-    console.warn("Could not load entries — offline mode", err);
-    return [];
+    console.error("Update entry failed", err);
+    return null;
   }
 }

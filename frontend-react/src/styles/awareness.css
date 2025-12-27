@@ -1,0 +1,94 @@
+.awareness-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+}
+
+.awareness-panel {
+  width: 680px;
+  max-width: 92%;
+  border-radius: 22px;
+  padding: 22px 22px 26px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,0.06),
+    rgba(0,0,0,0.35)
+  );
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.55),
+    inset 0 0 18px rgba(255,255,255,0.05);
+}
+
+.awareness-title {
+  font-size: 20px;
+  color: white;
+}
+
+.awareness-sub {
+  margin-top: 4px;
+  opacity: .7;
+  font-size: 13px;
+}
+
+.awareness-group {
+  margin-top: 18px;
+}
+
+.awareness-group h4 {
+  margin-bottom: 8px;
+  font-weight: 500;
+  opacity: .9;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 6px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.18);
+  opacity: .65;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.chip:hover {
+  opacity: .9;
+}
+
+.chip.active {
+  opacity: 1;
+  border-color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.12);
+}
+
+.awareness-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.skip-btn {
+  background: none;
+  border: none;
+  color: #bfbfbf;
+  cursor: pointer;
+}
+
+.save-btn {
+  padding: 8px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.15);
+  cursor: pointer;
+}

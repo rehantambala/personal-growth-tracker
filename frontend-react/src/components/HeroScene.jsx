@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import "../styles/hero.css";
+import ScrollCue from "./ScrollCue";
+
 
 export default function HeroScene() {
 
@@ -45,7 +47,9 @@ export default function HeroScene() {
           <button className="secondary-btn">Learn More</button>
         </div>
 
+
       </div>
+      <ScrollCue />
     </section>
   );
 }

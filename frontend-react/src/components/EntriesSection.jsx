@@ -1,118 +1,206 @@
 import React, { useState, useEffect } from "react";
-import EntryCard from "./EntryCard";
-import NewEntryModal from "./NewEntryModal";
 import "../styles/entries.css";
-import { saveEntryToBackend } from "../api/entriesApi";
+
+import EntryCard from "./EntryCard";
 import EntryExpandedView from "./EntryExpandedView";
-import { fetchEntriesFromBackend } from "../api/entriesApi";
+import AwarenessOverlay from "./AwarenessOverlay";
 
+import {
+  fetchEntriesFromBackend,
+  saveEntryToBackend,
+  updateEntryInBackend
+} from "../api/entriesApi";
 
-export default function EntriesSection({ entries = [], loading }) {
+export default function EntriesSection() {
 
-  // Local reflections added by user (temporary until DB save)
-  const [localEntries, setLocalEntries] = useState([]);
+  const [entries, setEntries] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
-  // Modal state
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+  const [newNote, setNewNote] = useState("");
 
-  // Merge backend + local state
-  const allEntries = [...localEntries, ...entries];
-
+  // 🟢 Cinematic card open
   const [selectedEntry, setSelectedEntry] = useState(null);
 
+  // 🟢 Awareness overlay after save
+  const [pendingEntry, setPendingEntry] = useState(null);
+  const [showAwareness, setShowAwareness] = useState(false);
 
-  // When backend loads fresh data, keep local ones on top
+
+  // 🟢 Load entries from backend
   useEffect(() => {
-    // prevents duplicates if page refresh happens later
-  }, [entries]);
+    async function load() {
+      const data = await fetchEntriesFromBackend();
+      setEntries(data || []);
+    }
+    load();
+  }, []);
 
- const handleAddEntry = async (entry) => {
 
-  // 1) Add instantly to UI
-  const tempId = Date.now();
-  const tempEntry = { ...entry, _id: tempId, temp: true };
+  // 🟢 Save new reflection
+  async function handleSave() {
 
-  setLocalEntries(prev => [tempEntry, ...prev]);
+    if (!newTitle.trim() || !newNote.trim()) return;
 
-  // 2) Try saving to backend
-  const saved = await saveEntryToBackend(entry);
+    const saved = await saveEntryToBackend({
+      title: newTitle,
+      note: newNote,
+      mood: "neutral",
+      category: "General",
+      type: "Reflection"
+    });
 
-  // 3) If backend responded — replace local copy
-  if (saved?._id) {
-    setLocalEntries(prev =>
-      prev.map(e => e._id === tempId ? saved : e)
-    );
+    if (saved?._id) {
+
+      // add to UI instantly
+      setEntries(prev => [saved, ...prev]);
+
+      // trigger awareness overlay
+      setPendingEntry(saved);
+      setShowAwareness(true);
+    }
+
+    setNewTitle("");
+    setNewNote("");
+    setShowModal(false);
   }
 
-  
-  // 4) If failed — keep local safely (no UX break)
-};
 
+  // 🟢 Save awareness metadata + update UI
+  async function handleAwarenessSave(meta) {
+
+    const updated = await updateEntryInBackend(
+      pendingEntry._id,   // <-- correct ID reference
+      {
+        emotionTone:   meta.emotionTone,
+        cognitiveLens: meta.cognitiveLens,
+        lifeContext:   meta.lifeContext
+      }
+    );
+
+    if (!updated) return;
+
+    // refresh in list
+    setEntries(prev =>
+      prev.map(e => e._id === updated._id ? updated : e)
+    );
+
+    // refresh expanded view also
+    setSelectedEntry(updated);
+
+    // close overlay
+    setShowAwareness(false);
+    setPendingEntry(null);
+  }
 
 
   return (
     <section className="entries-wrapper">
 
-      <div className="entries-header-row">
+      {/* Header */}
+      <div className="entries-header">
 
         <div>
-          <h2 className="section-heading">Your Reflections</h2>
-          <p className="section-sub">
+          <h2 className="entries-title">Your Reflections</h2>
+          <p className="entries-subtitle">
             A quiet archive of thoughts — held without noise or judgment.
           </p>
         </div>
 
         <button
           className="new-entry-btn"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setShowModal(true)}
         >
-          + New Reflection
+          ✨ New Reflection
         </button>
 
       </div>
 
-      {/* Loading */}
-      {loading && (
-        <div className="entries-loading">
-          <div className="loader-ring" />
-          <span>Listening to your memories…</span>
+
+      {/* Entries Grid */}
+      <div className="entries-grid">
+
+        {entries.map(entry => (
+          <EntryCard
+            key={entry._id}
+            entry={entry}
+            onClick={() => setSelectedEntry(entry)}
+          />
+        ))}
+
+        {entries.length === 0 && (
+          <p className="empty-state">
+            No reflections yet — begin your first trace of thought.
+          </p>
+        )}
+
+      </div>
+
+
+      {/* ✨ Modal */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+
+            <h3>New Reflection</h3>
+
+            <input
+              type="text"
+              placeholder="Title"
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value)}
+            />
+
+            <textarea
+              placeholder="Write your thoughts…"
+              value={newNote}
+              onChange={e => setNewNote(e.target.value)}
+            />
+
+            <div className="modal-actions">
+
+              <button
+                className="cancel-btn"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="save-btn"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+
+            </div>
+
+          </div>
         </div>
       )}
 
-      {/* Empty */}
-      {!loading && allEntries.length === 0 && (
-        <div className="empty-note">
-          No reflections yet — your journey begins here.
-        </div>
+
+      {/* 🌌 Awareness Overlay */}
+      {showAwareness && pendingEntry && (
+        <AwarenessOverlay
+          entry={pendingEntry}
+          onClose={() => {
+            setShowAwareness(false);
+            setPendingEntry(null);
+          }}
+          onSave={handleAwarenessSave}
+        />
       )}
 
-      {/* Entries */}
-      {!loading && allEntries.length > 0 && (
-        <div className="entries-grid">
-         {allEntries.map((entry, i) => (
-  <EntryCard
-    key={i}
-    entry={entry}
-    onClick={() => setSelectedEntry(entry)}
-  />
-))}
 
-        </div>
+      {/* 🟢 Expanded cinematic view */}
+      {selectedEntry && (
+        <EntryExpandedView
+          entry={selectedEntry}
+          onClose={() => setSelectedEntry(null)}
+        />
       )}
-      
 
-      {/* Modal */}
-      <NewEntryModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleAddEntry}
-      />
-<EntryExpandedView
-  entry={selectedEntry}
-  onClose={() => setSelectedEntry(null)}
-/>
-
-      
     </section>
   );
 }
