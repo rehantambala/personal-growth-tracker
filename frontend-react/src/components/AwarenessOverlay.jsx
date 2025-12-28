@@ -1,110 +1,113 @@
 import React, { useState } from "react";
 import "../styles/awareness.css";
 
-export default function AwarenessOverlay({ entry, onSave, onSkip }) {
+export default function AwarenessOverlay({ entry, onClose, onSave }) {
 
-  // Hooks must ALWAYS be declared at top level
-  const [tone, setTone] = useState("");
-  const [lens, setLens] = useState("");
-  const [context, setContext] = useState("");
+  const [emotionTone, setEmotionTone] = useState(entry.emotionTone || null);
+  const [cognitiveLens, setCognitiveLens] = useState(entry.cognitiveLens || null);
+  const [lifeContext, setLifeContext] = useState(entry.lifeContext || null);
 
-  if (!entry) return null;
+  const [saving, setSaving] = useState(false);
 
-  function handleSubmit() {
-    onSave({
-      mood: tone || "neutral",
-      category: context || "General",
-      type: lens || "Reflection"
-    });
+  async function handleSave() {
+
+    setSaving(true);
+
+    try {
+      const res = await fetch(
+        `http://localhost:4000/api/entries/${entry._id}/awareness`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            emotionTone,
+            cognitiveLens,
+            lifeContext
+          })
+        }
+      );
+
+      const data = await res.json();
+      const updatedEntry = data.entry;
+
+      // Send updated entry to parent - parent will close overlay
+      onSave(updatedEntry);
+
+    } catch (err) {
+      console.error("Awareness save failed:", err);
+      setSaving(false);  // Only reset saving state on error
+    }
+
+    // DON'T call onClose() here - parent handles it
+  }
+
+  function handleSkip() {
+    onClose();
+  }
+
+  function toggle(setter, val, current) {
+    setter(current === val ? null : val);
   }
 
   return (
     <div className="awareness-overlay">
+      <div className="awareness-card">
 
-      <div className="awareness-panel">
+        <h3>Add Awareness (Optional)</h3>
 
-        <h3 className="awareness-title">
-          Add Awareness (Optional)
-        </h3>
-
-        <p className="awareness-sub">
-          A gentle pause — label the meaning of this reflection
-        </p>
-
-
-        {/* Emotional Tone */}
-        <div className="awareness-group">
-          <p className="group-label">Emotional Tone</p>
-
-          <div className="chip-row">
-            {["happy","good","neutral","sad"].map(m => (
-              <button
-                key={m}
-                className={`chip ${tone === m ? "active" : ""}`}
-                onClick={() => setTone(m)}
-              >
-                {m}
-              </button>
-            ))}
-          </div>
+        <label>Emotional Tone</label>
+        <div className="chip-row">
+          {["happy","good","neutral","sad"].map(tone => (
+            <button
+              key={tone}
+              className={`chip ${emotionTone === tone ? "selected" : ""}`}
+              onClick={() => toggle(setEmotionTone, tone, emotionTone)}
+            >
+              {tone}
+            </button>
+          ))}
         </div>
 
-
-        {/* Cognitive Lens */}
-        <div className="awareness-group">
-          <p className="group-label">Cognitive Lens</p>
-
-          <div className="chip-row">
-            {[
-              "self-reflection",
-              "re-evaluation",
-              "acceptance",
-              "processing"
-            ].map(l => (
+        <label>Cognitive Lens</label>
+        <div className="chip-row">
+          {["self-reflection","re-evaluation","acceptance","processing"]
+            .map(lens => (
               <button
-                key={l}
-                className={`chip ${lens === l ? "active" : ""}`}
-                onClick={() => setLens(l)}
+                key={lens}
+                className={`chip ${cognitiveLens === lens ? "selected" : ""}`}
+                onClick={() => toggle(setCognitiveLens, lens, cognitiveLens)}
               >
-                {l}
+                {lens}
               </button>
             ))}
-          </div>
         </div>
 
-
-        {/* Life Context */}
-        <div className="awareness-group">
-          <p className="group-label">Life Context</p>
-
-          <div className="chip-row">
-            {[
-              "relationships",
-              "growth",
-              "identity",
-              "transition"
-            ].map(c => (
+        <label>Life Context</label>
+        <div className="chip-row">
+          {["relationships","growth","identity","transition"]
+            .map(ctx => (
               <button
-                key={c}
-                className={`chip ${context === c ? "active" : ""}`}
-                onClick={() => setContext(c)}
+                key={ctx}
+                className={`chip ${lifeContext === ctx ? "selected" : ""}`}
+                onClick={() => toggle(setLifeContext, ctx, lifeContext)}
               >
-                {c}
+                {ctx}
               </button>
             ))}
-          </div>
         </div>
 
-
-        {/* Actions */}
         <div className="awareness-actions">
 
-          <button className="skip-btn" onClick={onSkip}>
+          <button className="skip-btn" onClick={handleSkip}>
             Skip
           </button>
 
-          <button className="save-btn" onClick={handleSubmit}>
-            Save Awareness
+          <button
+            className="save-btn"
+            onClick={handleSave}
+            disabled={saving}
+          >
+            {saving ? "Saving…" : "Save Awareness"}
           </button>
 
         </div>

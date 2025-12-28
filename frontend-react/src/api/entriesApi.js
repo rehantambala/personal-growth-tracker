@@ -24,17 +24,18 @@ export async function saveEntryToBackend(entry) {
     return null;
   }
 }
-export async function updateEntryInBackend(id, updates) {
+
+export async function updateEntryInBackend(id, data) {
   try {
-    const res = await fetch(`http://localhost:4000/entries/${id}`, {
+    const res = await fetch(`${API_BASE}/entries/${id}/awareness`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updates)
+      body: JSON.stringify(data)
     });
 
     return await res.json();
   } catch (err) {
-    console.error("Update entry failed", err);
+    console.error("Awareness update failed", err);
     return null;
   }
 }

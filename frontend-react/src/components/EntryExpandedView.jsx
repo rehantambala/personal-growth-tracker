@@ -1,26 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../styles/entries.css";
+import { computeDepth } from "../utils/depthScore";
 
 export default function EntryExpandedView({ entry, onClose }) {
 
-  // 🟢 Hooks must always run (even if entry = null)
   const [deepMode, setDeepMode] = useState(false);
+  const bodyRef = useRef(null);
 
-  // if entry not loaded yet — do not render UI
+
+  // ✨ Scroll-reveal effect for body text
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+
+    el.classList.add("reveal-ready");
+
+    const observer = new IntersectionObserver(
+      ([item]) => {
+        if (item.isIntersecting) {
+          el.classList.add("revealed");
+        }
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   if (!entry) return null;
 
-  // 🗓 Safe date handling
   const date = new Date(entry.createdAt || entry.date).toLocaleString();
 
+  const depth = computeDepth(entry);
+
   return (
-    <div className={`expanded-overlay ${deepMode ? "deep-mode" : ""}`}>
+    <div
+      className={`expanded-overlay ${deepMode ? "deep-mode" : ""}`}
+      onClick={onClose}
+    >
+      <div
+        className="expanded-panel cinematic-panel"
+        onClick={(e) => e.stopPropagation()}
+      >
 
-      <div className="expanded-panel">
-
-        {/* Close */}
-        <button className="expanded-close" onClick={onClose}>
-          ✕
-        </button>
+        {/* Close button */}
+        <button className="expanded-close" onClick={onClose}>✕</button>
 
         {/* Title */}
         <h2 className="expanded-title">
@@ -33,18 +58,21 @@ export default function EntryExpandedView({ entry, onClose }) {
         {/* Deep Mode Toggle */}
         <button
           className="deep-mode-btn"
-          onClick={() => setDeepMode(prev => !prev)}
+          onClick={() => setDeepMode(v => !v)}
         >
           {deepMode ? "Exit Deep Mode" : "Enter Deep Mode"}
         </button>
 
-        {/* Reflection Body */}
-        <p className="expanded-body">
+        {/* Body */}
+        <p ref={bodyRef} className="expanded-body scroll-reveal">
           {(entry.content || entry.note || "").trim() || "— no text —"}
         </p>
+<div className="depth-score">
+  Reflection Depth: <strong>{depth}/10</strong>
+</div>
 
       </div>
-
     </div>
+    
   );
 }

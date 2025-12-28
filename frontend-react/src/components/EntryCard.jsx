@@ -1,56 +1,102 @@
-export default function EntryCard({ entry, onClick }) {
+import React, { useState } from "react";
+import AwarenessOverlay from "./AwarenessOverlay";
 
-  const date = new Date(
-    entry.createdAt || entry.date
-  ).toLocaleDateString();
+export default function EntryCard({ entry, onClick, onEntryUpdate }) {
+
+  const [showAwarenessOverlay, setShowAwarenessOverlay] = useState(false);
+
+  const hasAwareness =
+    entry.emotionTone ||
+    entry.cognitiveLens ||
+    entry.lifeContext;
+
+  const toneColor = {
+    happy: "#9bffbe",
+    good: "#c8ffd9",
+    neutral: "#bfbfbf",
+    sad: "#ffb3b3"
+  }[entry.emotionTone];
+
+  function handleAwarenessSave(updatedEntry) {
+    if (onEntryUpdate) onEntryUpdate(updatedEntry);
+    setShowAwarenessOverlay(false);
+  }
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    });
+  }
 
   return (
-    <div className="entry-card" onClick={onClick}>
-      <div className="entry-inner">
+    <>
+      <div
+        className="entry-card cinematic-card"
+        onClick={onClick}
+      >
+        <div className="entry-inner">
 
-        <div className="entry-header">
+          <div className="entry-header">
+            <h3>{entry.title}</h3>
+            <span className="entry-type">Reflection</span>
+          </div>
 
-          <h3>{entry.title || "Untitled Reflection"}</h3>
+          {hasAwareness && (
+            <div className="entry-awareness fade-in">
 
-          <span className="entry-type">
-            {entry.type || entry.category || "Reflection"}
-          </span>
+              {entry.emotionTone && (
+                <span
+                  className="tone-dot pulse"
+                  style={{ backgroundColor: toneColor }}
+                />
+              )}
+
+              {entry.cognitiveLens && (
+                <span className="awareness-chip pop-in">
+                  {entry.cognitiveLens}
+                </span>
+              )}
+
+              {entry.lifeContext && (
+                <span className="awareness-chip subtle pop-in">
+                  {entry.lifeContext}
+                </span>
+              )}
+
+            </div>
+          )}
+
+          <p className="entry-note">{entry.note}</p>
+
+          <div className="entry-date">
+            {formatDate(entry.createdAt)}
+          </div>
+
+          {!hasAwareness && (
+            <button
+              className="add-awareness-btn ghost-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAwarenessOverlay(true);
+              }}
+            >
+              ✦ Add Awareness
+            </button>
+          )}
+
         </div>
-
-
-        {/* 🌿 Awareness metadata chips */}
-        <div className="entry-meta">
-
-          {entry.emotionTone && (
-            <span className="meta-chip mood-chip">
-              {entry.emotionTone}
-            </span>
-          )}
-
-          {entry.cognitiveLens && (
-            <span className="meta-chip">
-              {entry.cognitiveLens}
-            </span>
-          )}
-
-          {entry.lifeContext && (
-            <span className="meta-chip">
-              {entry.lifeContext}
-            </span>
-          )}
-
-        </div>
-
-
-        <p className="entry-note">
-          {entry.content || entry.note}
-        </p>
-
-        <span className="entry-date">
-          {date}
-        </span>
-
       </div>
-    </div>
+
+      {showAwarenessOverlay && (
+        <AwarenessOverlay
+          entry={entry}
+          onClose={() => setShowAwarenessOverlay(false)}
+          onSave={handleAwarenessSave}
+        />
+      )}
+    </>
   );
 }
