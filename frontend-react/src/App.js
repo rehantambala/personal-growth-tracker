@@ -1,24 +1,30 @@
-import EntriesList from "./components/EntriesList";
+import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SplashIntro from "./components/SplashIntro";
+import HeroScene from "./components/HeroScene";
+import EntriesSection from "./components/EntriesSection";
 
 export default function App() {
+
+  // ===== INTRO STATE =====
+  const [showIntro, setShowIntro] = useState(true);
+
   return (
-    <div className="app-container">
+    <>
+      {/* ===== CINEMATIC INTRO ===== */}
+      {showIntro && (
+        <SplashIntro onFinish={() => setShowIntro(false)} />
+      )}
 
-      <div className="hero">
-
-  <h1 className="hero-title">
-    <span className="accent">Personal</span> Growth Tracker
-  </h1>
-
-  <p className="hero-sub">
-    reflections • mind archive • self evolution
-  </p>
-
-</div>
-
-
-      <EntriesList />
-
-    </div>
+      {/* ===== MAIN APP AFTER INTRO ===== */}
+      {!showIntro && (
+        <>
+          <HeroScene />
+          
+          {/* EntriesSection manages its own entries */}
+          <EntriesSection />
+        </>
+      )}
+    </>
   );
 }

@@ -1,0 +1,444 @@
+/* ============================================
+   ANALYTICS DASHBOARD - CINEMATIC DESIGN
+   ============================================ */
+
+/* Wrapper with fade-in */
+.analytics-dashboard-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.analytics-dashboard-wrapper.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animated Background */
+.analytics-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  animation: float 20s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #6bff9c 0%, transparent 70%);
+  top: -100px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #9affc7 0%, transparent 70%);
+  bottom: -150px;
+  right: -150px;
+  animation-delay: 7s;
+}
+
+.orb-3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, #ffd96b 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: 14s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+/* Content Container */
+.analytics-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   HEADER SECTION
+   ============================================ */
+
+.analytics-header-section {
+  position: relative;
+  text-align: center;
+  margin-bottom: 4rem;
+  padding-bottom: 2rem;
+}
+
+.header-glow {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 60px;
+  background: radial-gradient(ellipse, rgba(154, 255, 199, 0.3), transparent);
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.analytics-title {
+  font-size: 3.5rem;
+  font-weight: 200;
+  color: #fff;
+  margin: 0 0 0.8rem 0;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #fff 0%, #9affc7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  0% {
+    filter: drop-shadow(0 0 10px rgba(154, 255, 199, 0.3));
+  }
+  100% {
+    filter: drop-shadow(0 0 20px rgba(154, 255, 199, 0.6));
+  }
+}
+
+.analytics-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================
+   STATS CARDS
+   ============================================ */
+
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.stat-card-modern {
+  position: relative;
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cardSlideIn 0.6s ease-out forwards;
+  transition: all 0.3s ease;
+}
+
+.stat-card-modern:hover {
+  transform: translateY(-8px);
+  border-color: rgba(154, 255, 199, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+              0 0 30px rgba(154, 255, 199, 0.1);
+}
+
+.card-delay-1 { animation-delay: 0.1s; }
+.card-delay-2 { animation-delay: 0.2s; }
+.card-delay-3 { animation-delay: 0.3s; }
+.card-delay-4 { animation-delay: 0.4s; }
+
+@keyframes cardSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 10px rgba(154, 255, 199, 0.5));
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-number {
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: #9affc7;
+  margin-bottom: 0.3rem;
+  text-shadow: 0 0 20px rgba(154, 255, 199, 0.4);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 400;
+}
+
+.stat-glow {
+  position: absolute;
+  bottom: -50%;
+  right: -50%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(154, 255, 199, 0.15), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.5s ease;
+}
+
+.stat-card-modern:hover .stat-glow {
+  bottom: -30%;
+  right: -30%;
+  opacity: 1;
+}
+
+/* ============================================
+   CHARTS GRID
+   ============================================ */
+
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 2.5rem;
+}
+
+.chart-card-modern {
+  position: relative;
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 2rem;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.95);
+  animation: chartFadeIn 0.8s ease-out forwards;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.chart-card-modern:hover {
+  transform: scale(1.02);
+  border-color: rgba(154, 255, 199, 0.2);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5),
+              0 0 40px rgba(154, 255, 199, 0.1);
+}
+
+.chart-delay-1 { animation-delay: 0.2s; }
+.chart-delay-2 { animation-delay: 0.3s; }
+.chart-delay-3 { animation-delay: 0.4s; }
+.chart-delay-4 { animation-delay: 0.5s; }
+
+@keyframes chartFadeIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chart-header h3 {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.chart-accent {
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #9affc7, transparent);
+  border-radius: 10px;
+}
+
+.chart-body {
+  position: relative;
+  min-height: 280px;
+}
+
+/* Glow effects for different chart types */
+.card-glow-green {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(154, 255, 199, 0.08), transparent 50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.card-glow-yellow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 217, 107, 0.08), transparent 50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.chart-card-modern:hover .card-glow-green,
+.chart-card-modern:hover .card-glow-yellow {
+  opacity: 1;
+}
+
+/* ============================================
+   CUSTOM TOOLTIP
+   ============================================ */
+
+.custom-tooltip {
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(154, 255, 199, 0.3);
+  border-radius: 12px;
+  padding: 0.8rem 1.2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.tooltip-label {
+  color: #9affc7;
+  font-size: 0.9rem;
+  margin: 0 0 0.3rem 0;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.tooltip-value {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 280px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+  .charts-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .analytics-dashboard-wrapper {
+    padding: 3rem 1.5rem;
+  }
+
+  .analytics-title {
+    font-size: 2.5rem;
+  }
+
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .stat-card-modern {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .chart-card-modern {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-title {
+    font-size: 2rem;
+  }
+}
+
+.trend-insights-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.trend-card {
+  background: rgba(255,255,255,0.05);
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 14px;
+}

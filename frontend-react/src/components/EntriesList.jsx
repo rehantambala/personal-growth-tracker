@@ -16,10 +16,23 @@ export default function EntriesList() {
       .catch(err => console.log("Fetch error:", err));
   }, []);
 
+  // 🎯 NEW: Function to update a single entry in the list
+  function updateEntryInList(updatedEntry) {
+    setEntries(prevEntries =>
+      prevEntries.map(entry =>
+        entry._id === updatedEntry._id ? updatedEntry : entry
+      )
+    );
+  }
+
   return (
     <div className="entries-grid">
       {entries.map(entry =>
-        <EntryCard key={entry._id} entry={entry} />
+        <EntryCard 
+          key={entry._id} 
+          entry={entry}
+          onEntryUpdate={updateEntryInList}  // 🎯 Pass update function down
+        />
       )}
     </div>
   );

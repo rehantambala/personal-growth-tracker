@@ -1,40 +1,28 @@
 // 🟢 First: Importing libraries
 const express = require("express");
 const cors = require("cors");
-/*  “Hey Node, I want to use Express”
-“Hey Node, I want to use CORS”
-express → helps us create server & APIs
-cors → allows frontend & backend to communicate
- Without these:
-❌ we cannot create routes
-❌ browser would block requests */
-
 const mongoose = require("mongoose");
 
+/* express → creates backend server & routes
+   cors → allows frontend to communicate with backend */
 
-//🟢 Creating the server
-const app = express();  
-/*Think of this like:
-Creating the brain of your backend app
-All routes, APIs, logic, requests
-will run inside this app object */
+const app = express();  // 🧠 Main backend application object
 
-//This creates the server application object.
-// Everything runs inside this.
 
 // 🟢 Connect to MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/personal_growth_tracker")
-  .then(() => {
-    console.log("MongoDB connected successfully 🚀");
-  })
-  .catch(err => {
-    console.error("MongoDB connection error ❌", err);
-  });
+mongoose.connect("mongodb://127.0.0.1:27017/personal_growth_tracker", {
+  serverSelectionTimeoutMS: 5000
+})
+.then(() => console.log("MongoDB connected successfully 🚀"))
+.catch(err => console.error("MongoDB connection error ❌", err));
 
-  // 🟢 MongoDB Schema (Structure of our Entry)
+
+
+// 🟢 MongoDB Schema — Structure of each reflection entry
 const entrySchema = new mongoose.Schema({
+
   title: { type: String, required: true },
-  note: { type: String, required: true },
+  note:  { type: String, required: true },
 
   mood: {
     type: String,
@@ -52,46 +40,29 @@ const entrySchema = new mongoose.Schema({
     default: "Reflection"
   },
 
+  // 🌱 Psychological Awareness Metadata (optional)
+  emotionTone:   { type: String, default: null },
+  cognitiveLens: { type: String, default: null },
+  lifeContext:   { type: String, default: null },
+  growthPhase:   { type: String, default: null }, // reserved for tracker phase
+
   createdAt: { type: Date, default: Date.now },
   updatedAt: Date
 });
 
 
-// 🟢 Model = Collection in DB
+// 🟢 Model = MongoDB collection
 const Entry = mongoose.model("Entry", entrySchema);
 
 
 
-//Middleware = Helpers that run before routes
-app.use(cors());
-app.use(express.json());
-/*1️⃣ cors()
-This allows:
-✔ frontend (browser / React)
-to talk to
-✔ backend (this server)
-Without this —
-browser blocks API calls 🚫
-2️⃣ express.json()
-This allows backend to read request body.
-Meaning:
-When someone sends JSON like:*/
+// 🟢 Middleware
+app.use(cors());         // allow frontend → backend communication
+app.use(express.json()); // allow backend to read JSON bodies
 
 
-// temporary storage (will replace with DB later)
-// let entries = [];
 
-
-// test route
-/* app.get("/api/health", (req, res) => {
-  res.json({
-    status: "ok",
-    message: "Backend is running 🚀"
-
-  });
-}); */
-
-// get all entries from MongoDB
+// 🟢 Get all entries (Sorted newest first)
 app.get("/api/entries", async (req, res) => {
   try {
     const entries = await Entry.find().sort({ createdAt: -1 });
@@ -101,6 +72,22 @@ app.get("/api/entries", async (req, res) => {
       count: entries.length,
       entries
     });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch entries",
+      error: err.message
+    });
+  }
+});
+
+// Alias route (frontend can also call /entries)
+app.get("/entries", async (req, res) => {
+  try {
+    const entries = await Entry.find().sort({ createdAt: -1 });
+    res.json(entries);
+
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -111,63 +98,11 @@ app.get("/api/entries", async (req, res) => {
 });
 
 
-// add a new growth entry
-/*app.post("/api/entries", (req, res) => {
-  const entry = {
-    id: Date.now(),
-    title: req.body.title,
-    note: req.body.note,
-    createdAt: new Date()
-  };
 
-  entries.push(entry);
-
-  res.json({
-    success: true,
-    message: "Entry saved successfully",
-    entry
-  });
-}); */
-
-//Validation - improved version of the above route(POST /api/entries)
-/*app.post("/api/entries", (req, res) => {
-
-  const title = (req.body.title || "").trim();
-  const note = (req.body.note || "").trim();
-
-  // validation
-  if (!title) {
-    return res.status(400).json({
-      success: false,
-      message: "Title is required"
-    });
-  }
-
-  if (!note) {
-    return res.status(400).json({
-      success: false,
-      message: "Note is required"
-    });
-  }
-
-  // create entry
-  const entry = {
-    id: Date.now(),
-    title,
-    note,
-    createdAt: new Date()
-  };
-  // save entry
-  entries.push(entry);
-// send response(Success)
-  res.json({
-    success: true,
-    message: "Entry saved successfully",
-    entry
-  });
-});  */
+// 🟢 Add a new reflection entry
 app.post("/api/entries", async (req, res) => {
   try {
+
     const entry = await Entry.create({
       title: req.body.title,
       note: req.body.note,
@@ -191,52 +126,27 @@ app.post("/api/entries", async (req, res) => {
   }
 });
 
+// Alias create route
+app.post("/entries", async (req, res) => {
+  try {
+    const entry = await Entry.create(req.body);
+    res.json(entry);
 
-
-// get all entries
-/* app.get("/api/entries", (req, res) => {
-  res.json({
-    count: entries.length,
-    entries
-  });
-}); */
-
-
-// delete an entry by id
-/*app.delete("/api/entries/:id", (req, res) => {
-
-//🔹 Get id from URL
-  const id = Number(req.params.id);
-
-//🔹 Find entry in list
-  const index = entries.findIndex(e => e.id === id);
-
-//🔹 If entry doesn’t exist
-  if (index === -1) {
-    return res.status(404).json({
+  } catch (err) {
+    res.status(400).json({
       success: false,
-      message: "Entry not found"
+      message: "Failed to save entry",
+      error: err.message
     });
   }
+});
 
-//🔹 Otherwise delete entry
-  const deleted = entries.splice(index, 1)[0];
 
-//🔹 Send response back
-  res.json({
-    success: true,
-    message: "Entry deleted successfully",
-    deleted
-  });
 
-}); */
-
-// 🗑 Delete entry from MongoDB
+// 🟢 Delete entry
 app.delete("/api/entries/:id", async (req, res) => {
   try {
-    const id = req.params.id;
-
-    const deleted = await Entry.findByIdAndDelete(id);
+    const deleted = await Entry.findByIdAndDelete(req.params.id);
 
     if (!deleted) {
       return res.status(404).json({
@@ -261,62 +171,37 @@ app.delete("/api/entries/:id", async (req, res) => {
 });
 
 
-// update an entry
-/*app.patch("/api/entries/:id", (req, res) => {
 
-//🔹 Get id from URL
-  const id = Number(req.params.id);
-//🔹 Find entry
-  const entry = entries.find(e => e.id === id);
-//If not found
-  if (!entry) {
-    return res.status(404).json({
-      success: false,
-      message: "Entry not found"
-    });
-  }
-//🔹 Read new values
-  const title = req.body.title?.trim();
-  const note  = req.body.note?.trim(); 
-  /* The ?. means:
-if value exists → use it
-if not → ignore safely */
-
-//🔹 If request contains nothing to update
-  // if both fields missing
-  /*if (!title && !note) {
-    return res.status(400).json({
-      success: false,
-      message: "Nothing to update"
-    });
-  }
-//🔹 Update only provided fields
-  if (title) entry.title = title;
-  if (note)  entry.note  = note;
-//🔹 Add timestamp
-  entry.updatedAt = new Date();
-//🔹 Send response
-  res.json({
-    success: true,
-    message: "Entry updated successfully",
-    entry
-  });
-
-});  */
-
-// improved version of the above route (PATCH /api/entries/:id)
+// 🟢 Update reflection (core fields + awareness metadata)
 app.patch("/api/entries/:id", async (req, res) => {
   try {
-    const { title, note } = req.body;
 
-    // update only provided fields
+    // Only update fields that are actually provided
+    const {
+      title,
+      note,
+      emotionTone,
+      cognitiveLens,
+      lifeContext,
+      growthPhase
+    } = req.body;
+
+    const updateData = {
+      updatedAt: new Date(),
+
+      ...(title && { title }),
+      ...(note && { note }),
+
+      // awareness values — nullable but intentionally set
+      ...(emotionTone   !== undefined && { emotionTone }),
+      ...(cognitiveLens !== undefined && { cognitiveLens }),
+      ...(lifeContext   !== undefined && { lifeContext }),
+      ...(growthPhase   !== undefined && { growthPhase })
+    };
+
     const entry = await Entry.findByIdAndUpdate(
       req.params.id,
-      {
-        ...(title && { title }),
-        ...(note && { note }),
-        updatedAt: new Date()
-      },
+      updateData,
       { new: true }
     );
 
@@ -343,7 +228,49 @@ app.patch("/api/entries/:id", async (req, res) => {
 });
 
 
-// start the server
+
+// 🟢 Awareness — Dedicated Save Route
+// (Triggered ONLY when user confirms overlay)
+app.patch("/api/entries/:id/awareness", async (req, res) => {
+  try {
+
+    const entry = await Entry.findByIdAndUpdate(
+      req.params.id,
+      {
+        emotionTone:   req.body.emotionTone || null,
+        cognitiveLens: req.body.cognitiveLens || null,
+        lifeContext:   req.body.lifeContext || null,
+        growthPhase:   req.body.growthPhase || null,
+        updatedAt: new Date()
+      },
+      { new: true }
+    );
+
+    if (!entry) {
+      return res.status(404).json({
+        success: false,
+        message: "Entry not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Awareness saved",
+      entry
+    });
+
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Awareness update failed",
+      error: err.message
+    });
+  }
+});
+
+
+
+// 🟢 Start backend server
 const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

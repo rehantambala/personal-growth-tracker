@@ -1,0 +1,59 @@
+.timeline-wrapper {
+  margin-top: 40px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.timeline-title {
+  font-size: 18px;
+  font-weight: 600;
+  opacity: .95;
+}
+
+.timeline-subtitle {
+  opacity: .6;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.timeline-track {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+
+  padding: 12px 6px;
+
+  overflow-x: auto;
+}
+
+.timeline-node {
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.25);
+}
+
+/* Glow aura */
+.timeline-halo {
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  filter: blur(10px);
+  opacity: .55;
+  z-index: -1;
+}
+
+/* Tone colors */
+
+.tone-happy  { background: #6bff9c; }
+.tone-good   { background: #b8ffc9; }
+.tone-neutral{ background: #9ca3af; }
+.tone-sad    { background: #ff7a7a; }
+
+/* Halo colors */
+.tone-happy  + .timeline-halo { background: #6bff9c33; }
+.tone-good   + .timeline-halo { background: #b8ffc933; }
+.tone-neutral+ .timeline-halo { background: #9ca3af33; }
+.tone-sad    + .timeline-halo { background: #ff7a7a33; }
